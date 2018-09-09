@@ -31,6 +31,8 @@ public class BaseTest {
 
     @After
     public void tearDown(){
+        // поворот экрана в исходное состояние
+        driver.rotate(ScreenOrientation.PORTRAIT);
         driver.quit();
     }
 
