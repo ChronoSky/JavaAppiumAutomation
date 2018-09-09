@@ -1,6 +1,7 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -34,21 +35,25 @@ public class Task_2 {
     }
 
     @Test
-    public void Task_2(){
+    public void Task_2() {
         driver.findElementByXPath("//*[contains(@text, 'Search Wikipedia')]").click();
-        waitForElementPresentByXpath("//*[contains(@text, 'Search…')]" , "Не найден элемент Search", 10);
+        waitForElementPresent(By.xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"), "Не найден элемент Search", 10);
+        checkElementAttributeEquals(By.xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"), "text" , "Search…");
         System.out.println("TEST END");
     }
 
-
-    private WebElement waitForElementPresentByXpath(String xpath, String error_message, long timeout){
-        WebDriverWait wait = new WebDriverWait(driver, timeout);
-        wait.withMessage(error_message + "\n");
-        By by = By.xpath(xpath);
-        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    protected void checkElementAttributeEquals(By locator, String attName, String value) {
+        String text = waitForElementPresent(locator,  "Элемент не найден").getAttribute(attName);
+        Assert.assertTrue("Занчение атрибута '"+ attName +"' не соответствует ожидаемому [act:= "+ text +" | exp := "+ value +"]", text.equals(value));
     }
 
-    private WebElement waitForElementPresentByXpath(String xpath, String error_message){
-        return waitForElementPresentByXpath(xpath, error_message, 10);
+    private WebElement waitForElementPresent(By locator, String error_message, long timeout){
+        WebDriverWait wait = new WebDriverWait(driver, timeout);
+        wait.withMessage(error_message + "\n");
+        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
+    private WebElement waitForElementPresent(By locator, String error_message){
+        return waitForElementPresent(locator, error_message, 10);
     }
 }
