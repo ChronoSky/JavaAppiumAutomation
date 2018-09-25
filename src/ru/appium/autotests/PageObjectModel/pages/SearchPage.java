@@ -1,6 +1,7 @@
 package ru.appium.autotests.PageObjectModel.pages;
 
 import io.appium.java_client.AppiumDriver;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import ru.appium.autotests.PageObjectModel.core.MainPageObject;
@@ -17,12 +18,22 @@ public class SearchPage extends MainPageObject {
             RESULT_CONTEINERS = "org.wikipedia:id/page_list_item_container",
             CLOSE_X_BUTTON_ID = "org.wikipedia:id/search_close_btn",
             XPATH_MY_LISTS_BUTTON = "//*[@content-desc='My lists']",
-            XPATH_MY_LISTS_TITLE = "//*[@resource-id='org.wikipedia:id/single_fragment_toolbar']/*[@text='My lists']";
+            XPATH_MY_LISTS_TITLE = "//*[@resource-id='org.wikipedia:id/single_fragment_toolbar']/*[@text='My lists']",
+            XPATH_RESULT_CONTEINERS_BY_NAME_AND_DESCRIPTION = "//*[@resource-id='org.wikipedia:id/page_list_item_container']/*[./*[@resource-id='org.wikipedia:id/page_list_item_title' and @text='{ART_NAME}'] and ./*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='{ART_DESC}']]";
 
 
     public SearchPage(AppiumDriver driver) {
         super(driver);
     }
+
+
+    // ***************  TEMPLATES METHODS  ******************
+
+    public String getArticleByNameAndDescription(String articleName, String articlDescription){
+        return XPATH_RESULT_CONTEINERS_BY_NAME_AND_DESCRIPTION.replace("{ART_NAME}", articleName).replace("{ART_DESC}", articlDescription);
+    }
+
+    // ***************  TEMPLATES METHODS  ******************
 
     public void initSearchInput(){
         click(By.xpath(SEARCH_INIT_ELEMENT), "Не найдено поле с текстом 'Search Wikipedia'");
@@ -49,6 +60,11 @@ public class SearchPage extends MainPageObject {
         return getElementList(By.id(RESULT_CONTEINERS)).size();
     }
 
+    public void checkCountSearchResaultsMoreThan(int count) {
+        List<WebElement> listTabs =  getElementList(By.id(RESULT_CONTEINERS));
+        Assert.assertTrue("В списке содержится вкладок отличное от " + count,listTabs.size()>count );
+    }
+
     public void selectArticleByIndex(int index) {
         List<WebElement> searchList = getElementList(By.id(RESULT_CONTEINERS));
         searchList.get(index).click();
@@ -60,4 +76,7 @@ public class SearchPage extends MainPageObject {
     }
 
 
+    public void selectArticleByNameAndDescription(String articleName, String articlDescription) {
+        click(By.xpath(getArticleByNameAndDescription(articleName , articlDescription)),"Не найдена статья с именем '"+ articleName +"' и описанием '"+ articlDescription +"'");
+    }
 }

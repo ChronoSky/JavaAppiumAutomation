@@ -22,6 +22,14 @@ public class ArticlePage extends MainPageObject {
         super(driver);
     }
 
+    // ***************  TEMPLATES METHODS  ******************
+
+    private String generatorReadingListMenuItem(String readingListName){
+        return XPATH_READING_LIST_MENU.replace("{SUBSTRING}", readingListName);
+    }
+
+    // ***************  TEMPLATES METHODS  ******************
+
     public void checkTitleExist() {
         Assert.assertTrue("Не найден титул страницы" , getElementList(By.id(ID_TITLE_ARTICLE)).size()!=0);
     }
@@ -71,9 +79,7 @@ public class ArticlePage extends MainPageObject {
         click(By.xpath(generatorReadingListMenuItem("List1")),"Не найден элемент с текстом 'Create new'");
     }
 
-    private String generatorReadingListMenuItem(String readingListName){
-        return XPATH_READING_LIST_MENU.replace("{SUBSTRING}", readingListName);
-    }
+
 
     public void checkTitleNameEquals(String listTabText) {
         String titleTabText = waitForElementPresent(By.id(ID_TITLE_ARTICLE),"не найден титул страницы").getText();

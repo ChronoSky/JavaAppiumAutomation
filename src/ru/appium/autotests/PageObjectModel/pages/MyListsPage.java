@@ -19,9 +19,13 @@ public class MyListsPage extends MainPageObject {
         super(driver);
     }
 
+    // ***************  TEMPLATES METHODS  ******************
+
     public String getXpathListName(String listName){
         return XPATH_LIST_ITEM_NAME.replace("{SUBSTRING}", listName);
     }
+
+    // ***************  TEMPLATES METHODS  ******************
 
     public void selectListByName(String listName) {
         click(By.xpath(getXpathListName(listName)),"Не найдена список вкладок с именем '"+ listName +"'");
